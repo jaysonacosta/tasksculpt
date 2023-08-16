@@ -1,5 +1,6 @@
 import Layout from "@/layout/Layout";
 import { Routes } from "@/types/routes";
+import { api } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -14,27 +15,54 @@ export default function Dashboard() {
     void router.push(Routes.LOGIN);
   }
 
+  const { isSuccess: courseIsSuccess, data: courseData } =
+    api.course.getAll.useQuery();
+  const { isSuccess: taskIsSuccess, data: taskData } =
+    api.task.getAll.useQuery();
+
+  let overview;
+
+  if (courseIsSuccess && taskIsSuccess) {
+    if (courseData.length === 0 && taskData.length === 0) {
+      overview = (
+        <div>
+          <p>
+            Nothing to see here. Add your first course and task to get started!
+          </p>
+        </div>
+      );
+    }
+  }
+
   let content;
 
   if (status === "loading") {
     content = <h1>Loading...</h1>;
   } else if (status === "authenticated") {
     content = (
-      <>
+      <section className="flex flex-col gap-y-5">
         <h1 className="text-2xl font-bold">Hi, {data.user.name}!</h1>
-        <br />
-        <section className="text-md grid gap-5 font-semibold md:grid-cols-3">
-          <div className="bg-white p-3 shadow md:col-start-1 md:col-end-3">
-            Overview
+        <div className="flex gap-x-5">
+          <button className="rounded bg-gradient-to-r from-emerald-400 to-cyan-400 p-3 font-bold text-white hover:from-emerald-500 hover:to-cyan-500">
+            Add Course
+          </button>
+          <button className="rounded bg-gradient-to-r from-emerald-400 to-cyan-400 p-3 font-bold text-white hover:from-emerald-500 hover:to-cyan-500">
+            Add Task
+          </button>
+        </div>
+        <div className="text-md grid gap-5  md:grid-cols-3">
+          <div className="flex flex-col gap-y-3 bg-white p-3 shadow md:col-start-1 md:col-end-3">
+            <p className="font-semibold">Overview</p>
+            <div>{overview}</div>
           </div>
           <div className="flex flex-col gap-y-3 bg-white p-3 shadow md:col-start-3 md:col-end-4">
-            <p>Calendar</p>
+            <p className="font-semibold">Calendar</p>
             <Calendar calendarType="gregory" />
           </div>
           <div className="bg-white p-3 shadow">Todays tasks</div>
           <div className="bg-white p-3 shadow">Upcoming assignments</div>
-        </section>
-      </>
+        </div>
+      </section>
     );
   }
   return (
