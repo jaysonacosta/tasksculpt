@@ -25,6 +25,7 @@ model Account {
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
+    @@index([userId])
 }
 
 model Session {
@@ -33,6 +34,8 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
 }
 
 model User {
@@ -43,6 +46,43 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    courses       Course[]
+    tasks         Task[]
+    sharedTasks   Task[]    @relation("SharedUsers")
+}
+
+model Course {
+    id             String    @id @default(cuid())
+    userId         String
+    user           User      @relation(fields: [userId], references: [id])
+    courseName     String
+    instructorName String?
+    startDate      DateTime?
+    endDate        DateTime?
+    daysOfWeek     String?
+    colorCode      String
+    notes          String
+    Task           Task[]
+
+    @@index([userId])
+}
+
+model Task {
+    id                      String   @id @default(cuid())
+    userId                  String
+    courseId                String
+    user                    User     @relation(fields: [userId], references: [id])
+    course                  Course   @relation(fields: [courseId], references: [id])
+    description             String?
+    dueDate                 DateTime
+    priority                String
+    status                  String
+    estimatedCompletionDate DateTime
+    actualCompletionDate    DateTime
+    sharedUsers             User[]   @relation(name: "SharedUsers")
+
+    @@index([userId])
+    @@index([courseId])
 }
 
 model VerificationToken {
