@@ -1,8 +1,10 @@
+import Button from "@/components/Button/Button";
 import Layout from "@/layout/Layout";
 import { Routes } from "@/types/routes";
 import { api } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -43,12 +45,10 @@ export default function Dashboard() {
       <section className="flex flex-col gap-y-5">
         <h1 className="text-2xl font-bold">Hi, {data.user.name}!</h1>
         <div className="flex gap-x-5">
-          <button className="rounded bg-gradient-to-r from-emerald-400 to-cyan-400 p-3 font-bold text-white hover:from-emerald-500 hover:to-cyan-500">
-            Add Course
-          </button>
-          <button className="rounded bg-gradient-to-r from-emerald-400 to-cyan-400 p-3 font-bold text-white hover:from-emerald-500 hover:to-cyan-500">
-            Add Task
-          </button>
+          <Link href={Routes.NEW_COURSE}>
+            <Button type="success">Add Course</Button>
+          </Link>
+          <Button type="success">Add Task</Button>
         </div>
         <div className="text-md grid gap-5  lg:grid-cols-3">
           <div className="flex flex-col gap-y-3 bg-white p-3 shadow lg:col-start-1 lg:col-end-3">
