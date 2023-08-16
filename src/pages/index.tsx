@@ -32,13 +32,16 @@ export default function Home() {
           <div className="grid place-content-center">
             <div className="flex flex-col items-center rounded bg-white p-10">
               <h2 className="text-3xl font-semibold">Welcome</h2>
-              <p className="font-semibold text-gray-400" onClick={handleSignIn}>
+              <p className="font-semibold text-gray-400">
                 Sign In to TaskSculpt
               </p>
               <br />
               <hr className="w-full" />
               <br />
-              <button className="w-full rounded bg-green-400 p-4 font-bold text-white">
+              <button
+                className="w-full rounded bg-green-400 p-4 font-bold text-white"
+                onClick={handleSignIn}
+              >
                 Sign In
               </button>
             </div>
