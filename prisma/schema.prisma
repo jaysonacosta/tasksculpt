@@ -61,7 +61,7 @@ model Course {
     endDate        DateTime?
     daysOfWeek     String?
     colorCode      String
-    notes          String
+    notes          String?
     tasks           Task[]
 
     @@index([userId])

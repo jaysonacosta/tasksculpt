@@ -2,6 +2,7 @@ import Button from "@/components/Button/Button";
 import Layout from "@/layout";
 import { Routes } from "@/types/routes";
 import { api } from "@/utils/api";
+import { IconLoader } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -14,6 +15,8 @@ export default function Course() {
   if (status === "unauthenticated") {
     void router.push(Routes.LOGIN);
   }
+
+  const course = api.course.create.useMutation();
 
   const [courseName, setCourseName] = useState("");
   const [instructorName, setInstructorName] = useState("");
@@ -28,18 +31,28 @@ export default function Course() {
     friday: false,
     saturday: false,
   });
-  const [color, setColor] = useState("");
+  const [color, setColor] = useState("#000000");
   const [notes, setNotes] = useState("");
 
   const handleSubmit = (evt: React.FormEvent) => {
     evt.preventDefault();
-    console.log(courseName);
-    console.log(instructorName);
-    console.log(startDate);
-    console.log(endDate);
-    console.log(daysOfWeek);
-    console.log(color);
-    console.log(notes);
+    let daysOfWeekAsString = "";
+    Object.entries(daysOfWeek).forEach(([day, isSelected]) => {
+      if (isSelected) {
+        daysOfWeekAsString += `${day}/`;
+      }
+    });
+
+    course.mutate({
+      courseName,
+      instructorName: instructorName.length > 0 ? instructorName : undefined,
+      startDate: startDate.length !== 0 ? new Date(startDate) : undefined,
+      endDate: endDate.length !== 0 ? new Date(endDate) : undefined,
+      daysOfWeek:
+        daysOfWeekAsString.length !== 0 ? daysOfWeekAsString : undefined,
+      color,
+      notes: notes.length > 0 ? notes : undefined,
+    });
   };
 
   const weekdays = [
@@ -60,6 +73,9 @@ export default function Course() {
     content = (
       <section className="flex flex-col gap-y-5">
         <h1 className="text-2xl font-bold">Create New Course</h1>
+        {course.isLoading && (
+          <IconLoader className="animate-spin" color="#4299e1" />
+        )}
         <form onSubmit={handleSubmit} className="grid gap-5 lg:grid-cols-3">
           <div className="flex flex-col lg:col-start-1 lg:col-end-2">
             <label htmlFor="course-name" className=" text-gray-700">
@@ -181,6 +197,7 @@ export default function Course() {
               type="submit"
               value="Create"
               className="w-full cursor-pointer p-3"
+              disabled={course.isLoading}
             />
           </Button>
           <Button className="p-0 lg:col-start-2 lg:col-end-3" type="error">
@@ -188,6 +205,7 @@ export default function Course() {
               type="reset"
               value="Clear"
               className="w-full cursor-pointer p-3"
+              disabled={course.isLoading}
             />
           </Button>
         </form>
