@@ -50,12 +50,12 @@ export default function Dashboard() {
             Add Task
           </button>
         </div>
-        <div className="text-md grid gap-5  md:grid-cols-3">
-          <div className="flex flex-col gap-y-3 bg-white p-3 shadow md:col-start-1 md:col-end-3">
+        <div className="text-md grid gap-5  lg:grid-cols-3">
+          <div className="flex flex-col gap-y-3 bg-white p-3 shadow lg:col-start-1 lg:col-end-3">
             <p className="font-semibold">Overview</p>
             <div>{overview}</div>
           </div>
-          <div className="flex flex-col gap-y-3 bg-white p-3 shadow md:col-start-3 md:col-end-4">
+          <div className="flex flex-col gap-y-3 bg-white p-3 shadow lg:col-start-3 lg:col-end-4">
             <p className="font-semibold">Calendar</p>
             <Calendar calendarType="gregory" />
           </div>
