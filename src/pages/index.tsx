@@ -1,7 +1,7 @@
 import { useSession, signIn } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Routes } from "./types/routes";
+import { Routes } from "@/types/routes";
 
 export default function Home() {
   const { status } = useSession();

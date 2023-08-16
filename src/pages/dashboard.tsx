@@ -1,7 +1,7 @@
+import { Routes } from "@/types/routes";
 import { signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Routes } from "./types/routes";
 
 export default function Dashboard() {
   const { status } = useSession();
