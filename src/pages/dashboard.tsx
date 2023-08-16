@@ -1,3 +1,4 @@
+import Layout from "@/layout/Layout";
 import { Routes } from "@/types/routes";
 import { signOut, useSession } from "next-auth/react";
 import Head from "next/head";
@@ -17,15 +18,8 @@ export default function Dashboard() {
         <title>TaskSculpt | Dashboard</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="">
-        <button
-          onClick={() => {
-            void signOut();
-          }}
-        >
-          sign out
-        </button>
-      </main>
+
+      <Layout>Hi</Layout>
     </>
   );
 }

@@ -12,7 +12,7 @@ export default function Home() {
   }
 
   const handleSignIn = () => {
-    void signIn();
+    void signIn("google", { callbackUrl: Routes.DASHBOARD });
   };
 
   return (
