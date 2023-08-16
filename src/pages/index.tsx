@@ -1,11 +1,25 @@
+import { useSession, signIn } from "next-auth/react";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { Routes } from "./types/routes";
 
 export default function Home() {
+  const { status } = useSession();
+  const router = useRouter();
+
+  if (status === "authenticated") {
+    void router.push(Routes.DASHBOARD);
+  }
+
+  const handleSignIn = () => {
+    void signIn();
+  };
+
   return (
     <>
       <Head>
         <title>TaskSculpt</title>
-        <meta name="description" content="TaskSculpt login page" />
+        <meta name="description" content="TaskSculpt sign in page" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="min-h-screen bg-gradient-to-r from-blue-200 to-cyan-200">
@@ -16,16 +30,16 @@ export default function Home() {
             </h1>
           </div>
           <div className="grid place-content-center">
-            <div className="flex flex-col rounded bg-white p-10 items-center">
+            <div className="flex flex-col items-center rounded bg-white p-10">
               <h2 className="text-3xl font-semibold">Welcome</h2>
-              <p className="font-semibold text-gray-400">
-                Log In to TaskSculpt
+              <p className="font-semibold text-gray-400" onClick={handleSignIn}>
+                Sign In to TaskSculpt
               </p>
               <br />
-              <hr className="w-full"/>
+              <hr className="w-full" />
               <br />
-              <button className="rounded bg-green-400 p-4 font-bold text-white w-full">
-                Log In
+              <button className="w-full rounded bg-green-400 p-4 font-bold text-white">
+                Sign In
               </button>
             </div>
           </div>
