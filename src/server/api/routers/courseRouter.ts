@@ -5,6 +5,9 @@ export const courseRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.course.findMany({
       where: { userId: ctx.session.user.id },
+      include: {
+        tasks: true,
+      },
     });
   }),
   create: protectedProcedure

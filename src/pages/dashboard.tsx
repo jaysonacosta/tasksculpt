@@ -23,6 +23,7 @@ export default function Dashboard() {
     api.task.getAll.useQuery();
 
   let overview;
+  let courseProgress;
 
   if (courseIsSuccess && taskIsSuccess) {
     if (courseData.length === 0 && taskData.length === 0) {
@@ -32,6 +33,31 @@ export default function Dashboard() {
             Nothing to see here. Add your first course and task to get started!
           </p>
         </div>
+      );
+    } else {
+      courseProgress = (
+        <>
+          {courseData.map((course) => {
+            let taskInformation;
+            if (course.tasks.length === 0) {
+              taskInformation = "No tasks 🎉";
+            } else {
+              taskInformation = `You have ${course.tasks.length} tasks.`;
+            }
+            return (
+              <div key={course.id} className="flex bg-slate-100">
+                <div
+                  className="w-2"
+                  style={{ backgroundColor: course.colorCode }}
+                ></div>
+                <div className="flex w-full justify-between">
+                  <p className="p-2 font-semibold">{course.courseName}</p>
+                  <p className="p-2 text-gray-600">{taskInformation}</p>
+                </div>
+              </div>
+            );
+          })}
+        </>
       );
     }
   }
@@ -59,8 +85,16 @@ export default function Dashboard() {
             <p className="font-semibold">Calendar</p>
             <Calendar calendarType="gregory" />
           </div>
-          <div className="bg-white p-3 shadow">Todays tasks</div>
-          <div className="bg-white p-3 shadow">Upcoming assignments</div>
+          <div className="flex flex-col gap-y-3 bg-white p-3 shadow">
+            <p className="font-semibold">Today&apos;s Tasks</p>
+          </div>
+          <div className="flex flex-col gap-y-3 bg-white p-3 shadow">
+            <p className="font-semibold">Upcoming Tasks</p>
+          </div>
+          <div className="flex flex-col gap-y-3 bg-white p-3 shadow">
+            <p className="font-semibold">Course Progress</p>
+            {courseProgress}
+          </div>
         </div>
       </section>
     );
