@@ -73,6 +73,7 @@ model Task {
     courseId                String
     user                    User      @relation(fields: [userId], references: [id])
     course                  Course    @relation(fields: [courseId], references: [id])
+    title                   String
     description             String?
     dueDate                 DateTime
     priority                Int       @default(0)
