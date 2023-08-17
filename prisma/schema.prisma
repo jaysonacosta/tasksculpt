@@ -62,24 +62,24 @@ model Course {
     daysOfWeek     String?
     colorCode      String
     notes          String?
-    tasks           Task[]
+    tasks          Task[]
 
     @@index([userId])
 }
 
 model Task {
-    id                      String   @id @default(cuid())
+    id                      String    @id @default(cuid())
     userId                  String
     courseId                String
-    user                    User     @relation(fields: [userId], references: [id])
-    course                  Course   @relation(fields: [courseId], references: [id])
+    user                    User      @relation(fields: [userId], references: [id])
+    course                  Course    @relation(fields: [courseId], references: [id])
     description             String?
     dueDate                 DateTime
-    priority                String
+    priority                Int       @default(0)
     status                  String
     estimatedCompletionDate DateTime
-    actualCompletionDate    DateTime
-    sharedUsers             User[]   @relation(name: "SharedUsers")
+    actualCompletionDate    DateTime?
+    sharedUsers             User[]    @relation(name: "SharedUsers")
 
     @@index([userId])
     @@index([courseId])

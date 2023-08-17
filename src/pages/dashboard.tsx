@@ -42,7 +42,9 @@ export default function Dashboard() {
             if (course.tasks.length === 0) {
               taskInformation = "No tasks 🎉";
             } else {
-              taskInformation = `You have ${course.tasks.length} tasks.`;
+              taskInformation = `${course.tasks.length} task${
+                course.tasks.length > 1 ? "s" : ""
+              }`;
             }
             return (
               <div key={course.id} className="flex bg-slate-100">
@@ -74,7 +76,9 @@ export default function Dashboard() {
           <Link href={Routes.NEW_COURSE}>
             <Button type="success">Add Course</Button>
           </Link>
-          <Button type="success">Add Task</Button>
+          <Link href={Routes.NEW_TASK}>
+            <Button type="success">Add Task</Button>
+          </Link>
         </div>
         <div className="text-md grid gap-5  lg:grid-cols-3">
           <div className="flex flex-col gap-y-3 bg-white p-3 shadow lg:col-start-1 lg:col-end-3">
