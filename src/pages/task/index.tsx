@@ -6,7 +6,7 @@ import { IconLoader } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function Task() {
   const { status } = useSession();
@@ -24,20 +24,28 @@ export default function Task() {
   } = api.course.getAll.useQuery();
 
   const [courseId, setCourseId] = useState("");
+  const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [estimatedCompletionDate, setEstimatedCompletionDate] = useState("");
   const [taskStatus, setTaskStatus] = useState("");
   const [priority, setPriority] = useState(0);
   const [description, setDescription] = useState("");
 
+  const courseIdRef = useRef<HTMLSelectElement>(null);
+  const taskStatusRef = useRef<HTMLSelectElement>(null);
+
   const handleSubmit = (evt: React.FormEvent) => {
     evt.preventDefault();
 
+    if (!courseIdRef.current || !taskStatusRef.current) {
+      return;
+    }
     task.mutate({
-      courseId,
-      dueDate: new Date(dueDate),
-      estimatedCompletionDate: new Date(estimatedCompletionDate),
-      status: taskStatus,
+      courseId: courseIdRef.current.value,
+      title,
+      dueDate: new Date(),
+      estimatedCompletionDate: new Date(),
+      status: taskStatusRef.current.value,
       priority,
       description: description.length > 0 ? description : undefined,
     });
@@ -76,6 +84,7 @@ export default function Task() {
                 setCourseId(evt.target.value);
               }}
               value={courseId}
+              ref={courseIdRef}
             >
               {courseData.map((course) => {
                 return (
@@ -85,6 +94,21 @@ export default function Task() {
                 );
               })}
             </select>
+          </div>
+          <div className="flex flex-col lg:col-start-1 lg:col-end-2">
+            <label htmlFor="title" className=" text-gray-700">
+              Title
+            </label>
+            <input
+              required={true}
+              type="text"
+              name="title"
+              className="rounded p-2 shadow"
+              onChange={(evt) => {
+                setTitle(evt.target.value);
+              }}
+              value={title}
+            />
           </div>
           <div className="flex flex-col lg:col-start-1 lg:col-end-2">
             <label htmlFor="due-date" className=" text-gray-700">
@@ -130,6 +154,7 @@ export default function Task() {
               onChange={(evt) => {
                 setTaskStatus(evt.target.value);
               }}
+              ref={taskStatusRef}
               value={taskStatus}
             >
               <option value="Not Started">Not Started</option>

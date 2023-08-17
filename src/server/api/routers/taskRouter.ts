@@ -7,10 +7,22 @@ export const taskRouter = createTRPCRouter({
       where: { userId: ctx.session.user.id },
     });
   }),
+  getAllDueToday: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.task.findMany({
+      where: {
+        userId: ctx.session.user.id,
+        dueDate: {
+          lte: new Date(new Date().setUTCHours(23, 59, 59, 999)),
+          gte: new Date(new Date().setUTCHours(0, 0, 0, 0)),
+        },
+      },
+    });
+  }),
   create: protectedProcedure
     .input(
       z.object({
         courseId: z.string(),
+        title: z.string(),
         dueDate: z.date(),
         estimatedCompletionDate: z.date(),
         status: z.string(),
@@ -22,6 +34,7 @@ export const taskRouter = createTRPCRouter({
       return ctx.prisma.task.create({
         data: {
           courseId: input.courseId,
+          title: input.title,
           dueDate: input.dueDate,
           estimatedCompletionDate: input.estimatedCompletionDate,
           actualCompletionDate: undefined,
