@@ -16,6 +16,9 @@ export const taskRouter = createTRPCRouter({
           gte: new Date(new Date().setUTCHours(0, 0, 0, 0)),
         },
       },
+      include: {
+        course: true,
+      },
     });
   }),
   create: protectedProcedure

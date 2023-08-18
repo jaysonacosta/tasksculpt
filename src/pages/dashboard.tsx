@@ -82,8 +82,15 @@ export default function Dashboard() {
           {tasksDueTodayData.map((task) => {
             return (
               <div key={task.id} className="flex bg-slate-100">
-                <div className="flex w-full justify-between">
-                  <p className="p-2 font-semibold">{task.title}</p>
+                <div
+                  className="w-2"
+                  style={{ backgroundColor: task.course.colorCode }}
+                ></div>
+                <div className="flex w-full justify-between whitespace-nowrap">
+                  <p className="w-40 truncate p-2 font-semibold">
+                    {task.title}
+                  </p>
+                  <p className="p-2 text-gray-600">{task.status}</p>
                 </div>
               </div>
             );
