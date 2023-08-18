@@ -2,6 +2,7 @@ import Button from "@/components/Button/Button";
 import Layout from "@/layout";
 import { Routes } from "@/types/routes";
 import { api } from "@/utils/api";
+import { createDateWithString } from "@/utils/date";
 import { IconLoader } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
@@ -43,8 +44,8 @@ export default function Task() {
     task.mutate({
       courseId: courseIdRef.current.value,
       title,
-      dueDate: new Date(),
-      estimatedCompletionDate: new Date(),
+      dueDate: createDateWithString(dueDate),
+      estimatedCompletionDate: createDateWithString(estimatedCompletionDate),
       status: taskStatusRef.current.value,
       priority,
       description: description.length > 0 ? description : undefined,

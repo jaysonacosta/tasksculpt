@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { createDate } from "@/utils/date";
 
 export const taskRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
@@ -12,13 +13,24 @@ export const taskRouter = createTRPCRouter({
       where: {
         userId: ctx.session.user.id,
         dueDate: {
-          lte: new Date(new Date().setUTCHours(23, 59, 59, 999)),
-          gte: new Date(new Date().setUTCHours(0, 0, 0, 0)),
+          lte: new Date(createDate().setHours(23, 59, 59, 999)),
+          gte: new Date(createDate().setHours(0, 0, 0, 0)),
         },
       },
       include: {
         course: true,
       },
+    });
+  }),
+  getAllUpcoming: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.task.findMany({
+      where: {
+        userId: ctx.session.user.id,
+        dueDate: {
+          gte: new Date(createDate().setHours(24, 0, 0, 0)),
+        },
+      },
+      include: { course: true },
     });
   }),
   create: protectedProcedure
