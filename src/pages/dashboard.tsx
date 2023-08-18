@@ -87,7 +87,9 @@ export default function Dashboard() {
                   style={{ backgroundColor: task.course.colorCode }}
                 ></div>
                 <div className="flex w-full justify-between whitespace-nowrap">
-                  <p className="truncate p-2 font-semibold w-40">{task.title}</p>
+                  <p className="w-40 truncate p-2 font-semibold">
+                    {task.title}
+                  </p>
                   <p className="p-2 text-gray-600">{task.status}</p>
                 </div>
               </div>
