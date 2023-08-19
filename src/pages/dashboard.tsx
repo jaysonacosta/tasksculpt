@@ -26,9 +26,13 @@ export default function Dashboard() {
   const { isSuccess: tasksDueTodayIsSuccess, data: tasksDueTodayData } =
     api.task.getAllDueToday.useQuery();
 
+  const { isSuccess: upcomingTasksIsSuccess, data: upcomingTasksData } =
+    api.task.getAllUpcoming.useQuery();
+
   let overview;
   let courseProgress;
   let tasksDueToday;
+  let upcomingTasks;
 
   if (courseIsSuccess && taskIsSuccess) {
     if (courseData.length === 0 && taskData.length === 0) {
@@ -100,6 +104,37 @@ export default function Dashboard() {
     }
   }
 
+  if (upcomingTasksIsSuccess) {
+    if (upcomingTasksData.length === 0) {
+      upcomingTasks = (
+        <div>
+          <p>Your horizon is clear! 🎉</p>
+        </div>
+      );
+    } else {
+      upcomingTasks = (
+        <>
+          {upcomingTasksData.map((task) => {
+            return (
+              <div key={task.id} className="flex bg-slate-100">
+                <div
+                  className="w-2"
+                  style={{ backgroundColor: task.course.colorCode }}
+                ></div>
+                <div className="flex w-full justify-between whitespace-nowrap">
+                  <p className="w-40 truncate p-2 font-semibold">
+                    {task.title}
+                  </p>
+                  <p className="p-2 text-gray-600">{task.status}</p>
+                </div>
+              </div>
+            );
+          })}
+        </>
+      );
+    }
+  }
+
   let content;
 
   if (status === "loading") {
@@ -131,6 +166,7 @@ export default function Dashboard() {
           </div>
           <div className="flex flex-col gap-y-3 bg-white p-3 shadow">
             <p className="font-semibold">Upcoming Tasks</p>
+            {upcomingTasks}
           </div>
           <div className="flex flex-col gap-y-3 bg-white p-3 shadow">
             <p className="font-semibold">Course Progress</p>

@@ -2,6 +2,7 @@ import Button from "@/components/Button/Button";
 import Layout from "@/layout";
 import { Routes } from "@/types/routes";
 import { api } from "@/utils/api";
+import { createDateWithString } from "@/utils/date";
 import { IconLoader } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
@@ -46,8 +47,9 @@ export default function Course() {
     course.mutate({
       courseName,
       instructorName: instructorName.length > 0 ? instructorName : undefined,
-      startDate: startDate.length !== 0 ? new Date(startDate) : undefined,
-      endDate: endDate.length !== 0 ? new Date(endDate) : undefined,
+      startDate:
+        startDate.length !== 0 ? createDateWithString(startDate) : undefined,
+      endDate: endDate.length !== 0 ? createDateWithString(endDate) : undefined,
       daysOfWeek:
         daysOfWeekAsString.length !== 0 ? daysOfWeekAsString : undefined,
       color,
