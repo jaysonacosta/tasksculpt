@@ -125,7 +125,13 @@ export default function Dashboard() {
                   <p className="w-40 truncate p-2 font-semibold">
                     {task.title}
                   </p>
-                  <p className="p-2 text-gray-600">{task.status}</p>
+                  <p className="p-2 text-gray-600">
+                    Due on&nbsp;
+                    {task.dueDate.toLocaleDateString(undefined, {
+                      month: "short",
+                      day: "2-digit",
+                    })}
+                  </p>
                 </div>
               </div>
             );
