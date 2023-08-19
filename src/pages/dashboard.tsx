@@ -1,4 +1,5 @@
 import Button from "@/components/Button/Button";
+import TodaysTasks from "@/components/dashboard/TodaysTasks/TodaysTasks";
 import Layout from "@/layout/Layout";
 import { Routes } from "@/types/routes";
 import { api } from "@/utils/api";
@@ -23,15 +24,11 @@ export default function Dashboard() {
   const { isSuccess: taskIsSuccess, data: taskData } =
     api.task.getAll.useQuery();
 
-  const { isSuccess: tasksDueTodayIsSuccess, data: tasksDueTodayData } =
-    api.task.getAllDueToday.useQuery();
-
   const { isSuccess: upcomingTasksIsSuccess, data: upcomingTasksData } =
     api.task.getAllUpcoming.useQuery();
 
   let overview;
   let courseProgress;
-  let tasksDueToday;
   let upcomingTasks;
 
   if (courseIsSuccess && taskIsSuccess) {
@@ -64,37 +61,6 @@ export default function Dashboard() {
                 <div className="flex w-full justify-between">
                   <p className="p-2 font-semibold">{course.courseName}</p>
                   <p className="p-2 text-gray-600">{taskInformation}</p>
-                </div>
-              </div>
-            );
-          })}
-        </>
-      );
-    }
-  }
-
-  if (tasksDueTodayIsSuccess) {
-    if (tasksDueTodayData.length === 0) {
-      tasksDueToday = (
-        <div>
-          <p>Nothing due today! 🎉</p>
-        </div>
-      );
-    } else if (tasksDueTodayIsSuccess) {
-      tasksDueToday = (
-        <>
-          {tasksDueTodayData.map((task) => {
-            return (
-              <div key={task.id} className="flex bg-slate-100">
-                <div
-                  className="w-2"
-                  style={{ backgroundColor: task.course.colorCode }}
-                ></div>
-                <div className="flex w-full justify-between whitespace-nowrap">
-                  <p className="w-40 truncate p-2 font-semibold">
-                    {task.title}
-                  </p>
-                  <p className="p-2 text-gray-600">{task.status}</p>
                 </div>
               </div>
             );
@@ -166,10 +132,7 @@ export default function Dashboard() {
             <p className="font-semibold">Calendar</p>
             <Calendar calendarType="gregory" />
           </div>
-          <div className="flex flex-col gap-y-3 bg-white p-3 shadow">
-            <p className="font-semibold">Today&apos;s Tasks</p>
-            {tasksDueToday}
-          </div>
+          <TodaysTasks />
           <div className="flex flex-col gap-y-3 bg-white p-3 shadow">
             <p className="font-semibold">Upcoming Tasks</p>
             {upcomingTasks}
