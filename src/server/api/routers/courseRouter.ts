@@ -10,6 +10,41 @@ export const courseRouter = createTRPCRouter({
       },
     });
   }),
+  getAllPaginated: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(10).nullish(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { limit, cursor } = input;
+      const paginationLimit = limit ?? 5;
+
+      const courses = await ctx.prisma.course.findMany({
+        // Take extra item at end used as the next cursor
+        take: paginationLimit + 1,
+        where: { userId: ctx.session.user.id },
+        include: { tasks: true },
+        cursor: cursor ? { id: cursor } : undefined,
+      });
+
+      let nextCursor: typeof cursor | undefined;
+      if (courses.length > paginationLimit) {
+        const nextItem = courses.pop();
+        nextCursor = nextItem?.id;
+      }
+
+      const courseCount = await ctx.prisma.course.count({
+        where: {
+          userId: ctx.session.user.id,
+        },
+      });
+
+      const pageCount = Math.ceil(courseCount / paginationLimit);
+
+      return { courses, nextCursor, pageCount };
+    }),
   create: protectedProcedure
     .input(
       z.object({
