@@ -40,21 +40,28 @@ export default function Calendar() {
 
   if (isSuccess) {
     const populateCalendar: TileContentFunc = ({ date, view }) => {
+      const initialTaskCount = 0;
+      let taskCount = 0;
       if (view === "month") {
-        const initialTaskCount = 0;
-        const taskCount = tasks.reduce(
+        taskCount = tasks.reduce(
           (acc, curr) =>
             curr.dueDate.toISOString() === date.toISOString() ? acc + 1 : acc,
           initialTaskCount
         );
+      } else if (view === "year") {
+        taskCount = tasks.reduce(
+          (acc, curr) =>
+            curr.dueDate.getMonth() === date.getMonth() ? acc + 1 : acc,
+          initialTaskCount
+        );
+      }
 
-        if (taskCount !== initialTaskCount) {
-          return (
-            <div className="absolute -right-1 -top-1 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-400 text-xs">
-              <p className="font-semibold text-white">{taskCount}</p>
-            </div>
-          );
-        }
+      if (taskCount !== initialTaskCount) {
+        return (
+          <div className="absolute -right-1 -top-1 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-400 text-xs">
+            <p className="font-semibold text-white">{taskCount}</p>
+          </div>
+        );
       }
     };
 
@@ -63,6 +70,7 @@ export default function Calendar() {
         tileContent={populateCalendar}
         tileClassName={() => "!overflow-visible relative"}
         calendarType={calendarType}
+        minDetail="year"
       />
     );
   }
