@@ -2,18 +2,28 @@ import { api } from "@/utils/api";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import DashboardCard from "../DashboardCard";
 import TaskSkeleton from "../TaskSkeleton";
+import { useState } from "react";
+import Pagination from "../Pagination";
 
 export default function TodaysTasks() {
   const {
     isSuccess,
-    data: tasks,
     isLoading,
+    data,
+    fetchNextPage,
+    fetchPreviousPage,
     isError,
-  } = api.task.getAllDueToday.useQuery();
+    isFetching,
+  } = api.task.getAllDueToday.useInfiniteQuery(
+    { limit: 5 },
+    { getNextPageParam: (lastPage) => lastPage.nextCursor }
+  );
+
+  const [page, setPage] = useState(0);
 
   let content;
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     content = <TaskSkeleton />;
   }
 
@@ -27,33 +37,46 @@ export default function TodaysTasks() {
   }
 
   if (isSuccess) {
-    if (tasks.length === 0) {
-      content = (
-        <div>
-          <p>Nothing due today! 🎉</p>
-        </div>
-      );
-    } else {
-      content = (
-        <>
-          {tasks.map((task) => {
-            return (
-              <div key={task.id} className="flex bg-slate-100">
-                <div
-                  className="w-2"
-                  style={{ backgroundColor: task.course.colorCode }}
-                ></div>
-                <div className="flex w-full justify-between whitespace-nowrap">
-                  <p className="w-40 truncate p-2 font-semibold">
-                    {task.title}
-                  </p>
-                  <p className="p-2 text-gray-600">{task.status}</p>
-                </div>
-              </div>
-            );
-          })}
-        </>
-      );
+    const { pages } = data;
+    const currentPage = pages[page];
+    if (currentPage) {
+      if (currentPage.tasks.length === 0) {
+        content = (
+          <div>
+            <p>Nothing due today! 🎉</p>
+          </div>
+        );
+      } else {
+        content = (
+          <>
+            <div className="flex grow flex-col gap-y-3">
+              {currentPage.tasks.map((task) => {
+                return (
+                  <div key={task.id} className="flex bg-slate-100">
+                    <div
+                      className="w-2"
+                      style={{ backgroundColor: task.course.colorCode }}
+                    ></div>
+                    <div className="flex w-full justify-between whitespace-nowrap">
+                      <p className="w-40 truncate p-2 font-semibold">
+                        {task.title}
+                      </p>
+                      <p className="p-2 text-gray-600">{task.status}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <Pagination
+              pageCount={currentPage.pageCount}
+              page={page}
+              setPage={setPage}
+              fetchNextPage={fetchNextPage}
+              fetchPreviousPage={fetchPreviousPage}
+            />
+          </>
+        );
+      }
     }
   }
 
