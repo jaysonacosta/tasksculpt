@@ -1,6 +1,7 @@
 import { api } from "@/utils/api";
-import { IconExclamationCircle, IconLoader } from "@tabler/icons-react";
+import { IconExclamationCircle } from "@tabler/icons-react";
 import DashboardCard from "../DashboardCard";
+import TaskSkeleton from "../TaskSkeleton";
 
 export default function CourseProgress() {
   const {
@@ -13,11 +14,7 @@ export default function CourseProgress() {
   let content;
 
   if (isLoading) {
-    content = (
-      <div>
-        <IconLoader className="animate-spin" color="#4299e1" />
-      </div>
-    );
+    content = <TaskSkeleton />;
   }
 
   if (isError) {
