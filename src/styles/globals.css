@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    background-color: #fafafa;
+}
+
+.react-calendar {
+    border: none !important;
+    width: fit-content !important;
+}
+
+#color-picker {
+    border-radius: 50%;
+    height: 42px;
+    width: 42px;
+    border: none;
+    outline: none;
+}
+
+#color-picker::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+#color-picker::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
