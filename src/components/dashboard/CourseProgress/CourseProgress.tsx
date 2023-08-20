@@ -1,6 +1,6 @@
 import { api } from "@/utils/api";
 import { IconExclamationCircle, IconLoader } from "@tabler/icons-react";
-import DashboardCard from "../DashboardCard/DashboardCard";
+import DashboardCard from "../DashboardCard";
 
 export default function CourseProgress() {
   const {
