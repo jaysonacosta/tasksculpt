@@ -1,6 +1,6 @@
 import Button from "@/components/Button/Button";
-import TodaysTasks from "@/components/dashboard/TodaysTasks/TodaysTasks";
-import UpcomingTasks from "@/components/dashboard/UpcomingTasks/UpcomingTasks";
+import TodaysTasks from "@/components/dashboard/TodaysTasks";
+import UpcomingTasks from "@/components/dashboard/UpcomingTasks";
 import Layout from "@/layout/Layout";
 import { Routes } from "@/types/routes";
 import { api } from "@/utils/api";
