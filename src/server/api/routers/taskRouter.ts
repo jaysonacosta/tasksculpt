@@ -82,6 +82,9 @@ export const taskRouter = createTRPCRouter({
         },
         include: { course: true },
         cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          dueDate: "asc",
+        },
       });
 
       let nextCursor: typeof cursor | undefined;
