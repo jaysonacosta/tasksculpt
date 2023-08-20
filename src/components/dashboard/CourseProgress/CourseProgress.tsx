@@ -15,12 +15,8 @@ export default function CourseProgress() {
     isError,
     isFetching,
   } = api.course.getAllPaginated.useInfiniteQuery(
-    {
-      limit: 5,
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
+    { limit: 5 },
+    { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
 
   const [page, setPage] = useState(0);
@@ -56,28 +52,30 @@ export default function CourseProgress() {
       } else {
         content = (
           <>
-            {currentPage.courses.map((course) => {
-              let taskInformation;
-              if (course.tasks.length === 0) {
-                taskInformation = "No tasks 🎉";
-              } else {
-                taskInformation = `${course.tasks.length} task${
-                  course.tasks.length > 1 ? "s" : ""
-                }`;
-              }
-              return (
-                <div key={course.id} className="flex bg-slate-100">
-                  <div
-                    className="w-2"
-                    style={{ backgroundColor: course.colorCode }}
-                  ></div>
-                  <div className="flex w-full justify-between">
-                    <p className="p-2 font-semibold">{course.courseName}</p>
-                    <p className="p-2 text-gray-600">{taskInformation}</p>
+            <div className="flex grow flex-col gap-y-3">
+              {currentPage.courses.map((course) => {
+                let taskInformation;
+                if (course.tasks.length === 0) {
+                  taskInformation = "No tasks 🎉";
+                } else {
+                  taskInformation = `${course.tasks.length} task${
+                    course.tasks.length > 1 ? "s" : ""
+                  }`;
+                }
+                return (
+                  <div key={course.id} className="flex bg-slate-100">
+                    <div
+                      className="w-2"
+                      style={{ backgroundColor: course.colorCode }}
+                    ></div>
+                    <div className="flex w-full justify-between">
+                      <p className="p-2 font-semibold">{course.courseName}</p>
+                      <p className="p-2 text-gray-600">{taskInformation}</p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
             <Pagination
               pageCount={currentPage.pageCount}
               page={page}
@@ -92,7 +90,7 @@ export default function CourseProgress() {
   }
 
   return (
-    <DashboardCard title="Course Progress" className=" h-[344px]">
+    <DashboardCard title="Course Progress" className="lg:h-[344px]">
       {content}
     </DashboardCard>
   );

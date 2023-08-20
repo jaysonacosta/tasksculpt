@@ -34,7 +34,7 @@ export default function Pagination({
       <button onClick={prevPage}>
         <IconCircleArrowLeft />
       </button>
-      <p>
+      <p className="tracking-widest">
         {page + 1}/{pageCount}
       </p>
       <button onClick={nextPage}>
