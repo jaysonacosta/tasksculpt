@@ -1,4 +1,5 @@
 import Button from "@/components/Button/Button";
+import Overview from "@/components/dashboard/Overview/Overview";
 import CourseProgress from "@/components/dashboard/CourseProgress";
 import TodaysTasks from "@/components/dashboard/TodaysTasks";
 import UpcomingTasks from "@/components/dashboard/UpcomingTasks";
@@ -9,7 +10,6 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-
 import "react-calendar/dist/Calendar.css";
 
 export default function Dashboard() {
@@ -19,8 +19,6 @@ export default function Dashboard() {
   if (status === "unauthenticated") {
     void router.push(Routes.LOGIN);
   }
-
-  let overview;
 
   let content;
 
@@ -39,10 +37,7 @@ export default function Dashboard() {
           </Link>
         </div>
         <div className="text-md grid gap-5  lg:grid-cols-3">
-          <div className="flex flex-col gap-y-3 bg-white p-3 shadow lg:col-start-1 lg:col-end-3">
-            <p className="font-semibold">Overview</p>
-            <div>{overview}</div>
-          </div>
+          <Overview />
           <Calendar />
           <TodaysTasks />
           <UpcomingTasks />
