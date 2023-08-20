@@ -2,14 +2,14 @@ import Button from "@/components/Button/Button";
 import CourseProgress from "@/components/dashboard/CourseProgress";
 import TodaysTasks from "@/components/dashboard/TodaysTasks";
 import UpcomingTasks from "@/components/dashboard/UpcomingTasks";
+import Calendar from "@/components/dashboard/Calendar";
 import Layout from "@/layout/Layout";
 import { Routes } from "@/types/routes";
-import { api } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import Calendar from "react-calendar";
+
 import "react-calendar/dist/Calendar.css";
 
 export default function Dashboard() {
@@ -19,12 +19,6 @@ export default function Dashboard() {
   if (status === "unauthenticated") {
     void router.push(Routes.LOGIN);
   }
-
-  const { isSuccess: courseIsSuccess, data: courseData } =
-    api.course.getAll.useQuery();
-
-  const { isSuccess: taskIsSuccess, data: taskData } =
-    api.task.getAll.useQuery();
 
   let overview;
 
@@ -49,10 +43,7 @@ export default function Dashboard() {
             <p className="font-semibold">Overview</p>
             <div>{overview}</div>
           </div>
-          <div className="flex flex-col gap-y-3 bg-white p-3 shadow lg:col-start-3 lg:col-end-4">
-            <p className="font-semibold">Calendar</p>
-            <Calendar calendarType="gregory" />
-          </div>
+          <Calendar />
           <TodaysTasks />
           <UpcomingTasks />
           <CourseProgress />
