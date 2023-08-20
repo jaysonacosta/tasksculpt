@@ -27,6 +27,11 @@ export const courseRouter = createTRPCRouter({
         where: { userId: ctx.session.user.id },
         include: { tasks: true },
         cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          tasks: {
+            _count: "desc",
+          },
+        },
       });
 
       let nextCursor: typeof cursor | undefined;
