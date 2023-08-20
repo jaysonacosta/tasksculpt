@@ -58,17 +58,51 @@ export const taskRouter = createTRPCRouter({
 
       return { tasks, nextCursor, pageCount };
     }),
-  getAllUpcoming: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.task.findMany({
-      where: {
-        userId: ctx.session.user.id,
-        dueDate: {
-          gte: new Date(createDate().setHours(24, 0, 0, 0)),
+  getAllUpcoming: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(10).nullish(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { limit, cursor } = input;
+      const paginationLimit = limit ?? 5;
+
+      const tomorrow = new Date(createDate().setHours(24, 0, 0, 0));
+
+      const tasks = await ctx.prisma.task.findMany({
+        // Take extra item at end used as the next cursor
+        take: paginationLimit + 1,
+        where: {
+          userId: ctx.session.user.id,
+          dueDate: {
+            gte: tomorrow,
+          },
         },
-      },
-      include: { course: true },
-    });
-  }),
+        include: { course: true },
+        cursor: cursor ? { id: cursor } : undefined,
+      });
+
+      let nextCursor: typeof cursor | undefined;
+      if (tasks.length > paginationLimit) {
+        const nextItem = tasks.pop();
+        nextCursor = nextItem?.id;
+      }
+
+      const taskCount = await ctx.prisma.task.count({
+        where: {
+          userId: ctx.session.user.id,
+          dueDate: {
+            gte: tomorrow,
+          },
+        },
+      });
+
+      const pageCount = Math.ceil(taskCount / paginationLimit);
+
+      return { tasks, nextCursor, pageCount };
+    }),
   create: protectedProcedure
     .input(
       z.object({
